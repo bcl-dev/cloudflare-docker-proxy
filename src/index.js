@@ -15,9 +15,6 @@ const routes = {
   ["ghcr." + CUSTOM_DOMAIN]: "https://ghcr.io",
   ["cloudsmith." + CUSTOM_DOMAIN]: "https://docker.cloudsmith.io",
   ["ecr." + CUSTOM_DOMAIN]: "https://public.ecr.aws",
-
-  // staging
-  ["docker-staging." + CUSTOM_DOMAIN]: dockerHub,
 };
 
 function routeByHosts(host) {
@@ -27,7 +24,7 @@ function routeByHosts(host) {
   if (MODE == "debug") {
     return TARGET_UPSTREAM;
   }
-  return "";
+  return dockerHub;
 }
 
 async function handleRequest(request) {
@@ -35,11 +32,9 @@ async function handleRequest(request) {
   const upstream = routeByHosts(url.hostname);
   if (upstream === "") {
     return new Response(
-      JSON.stringify({
-        routes: routes,
-      }),
+      "registry." + CUSTOM_DOMAIN,
       {
-        status: 404,
+        status: 200,
       }
     );
   }
