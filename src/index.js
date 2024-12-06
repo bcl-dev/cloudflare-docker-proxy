@@ -29,15 +29,15 @@ function routeByHosts(host) {
 
 async function handleRequest(request) {
   const url = new URL(request.url);
-  const upstream = routeByHosts(url.hostname);
-  if (upstream === "") {
+  if (url.pathname === "/") {
     return new Response(
       "registry." + CUSTOM_DOMAIN,
       {
-        status: 200,
+        status: 400,
       }
     );
   }
+  const upstream = routeByHosts(url.hostname);
   const isDockerHub = upstream == dockerHub;
   const authorization = request.headers.get("Authorization");
   if (url.pathname == "/v2/") {
